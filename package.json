@@ -1,0 +1,22 @@
+{
+  "name": "puretube",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "morgan": "~1.7.0",
+    "node-sass-middleware": "^0.10.1",
+    "pug": "^2.0.0-beta6",
+    "serve-favicon": "~2.3.0"
+  },
+  "description": "A single channel view for YouTube, focused on a cinematic experience and channel's playlists.",
+  "main": "app.js",
+  "author": "colby.sargent.design",
+  "license": "ISC"
+}

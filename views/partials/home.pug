@@ -1,0 +1,11 @@
+div.panel.text-center
+  div.container
+    div.row
+      div.xs-hidden.col-sm-3
+      div.col-xs-12.col-sm-6
+        form
+          div.input-group.input-group-lg.search-field
+            input.form-control(type='text' placeholder='Search Channels' ng-model='searchQuery')
+            a.input-group-btn(ng-href='/search/{{ searchQuery }}')
+              button.btn.btn-primary(type='submit' ng-click='searchChannels()') Go!
+      div.xs-hidden.col-sm-3

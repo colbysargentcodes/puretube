@@ -1,0 +1,98 @@
+div.lights-off(ng-class='{active: lightsOff}' ng-click='lightsOff=false')
+div.panel.text-center.channel-header
+  div.container
+    div.thumbnail
+      img(width='100' height='100' ng-attr-src='{{channelInfo.snippet.thumbnails.medium.url}}')
+    h3(ng-bind='channelInfo.snippet.title') Channel Name
+    small(ng-bind='channelInfo.statistics.subscriberCount.toLocaleString() + " subscribers"') 0 subscribers
+div.panel.video-info
+  div.channel-container
+    div.col-xs-12
+      h2(ng-bind='activeVideo.snippet.title') Video Title
+      small(ng-bind='activeVideo.statistics.viewCount.toLocaleString() + " views"') 0 views
+a#player-top
+div.jumbotron.video-container
+  div.video-width
+    div.row.video-info
+      div.col-xs-12(ng-class='{"col-sm-8": otherChannel}')
+        h2(ng-bind='activeVideo.snippet.title') Video Title
+        small(ng-bind='activeVideo.statistics.viewCount.toLocaleString() + " views"') 0 views
+      div.col-sm-4.hidden-xs.video-other-channel(ng-if='otherChannel')
+        div.thumbnail.text-right
+          div.media
+            div.media-body
+              h4(ng-bind='otherChannel.snippet.title') Other Channel Name
+              small(ng-bind='otherChannel.statistics.subscriberCount.toLocaleString() + " subscribers"') 0 subscribers
+            div.media-right
+              a(href='#')
+                img.media-object(ng-src='{{otherChannel.snippet.thumbnails.default.url}}' width='50' height='50')
+    div.row
+      div.col-xs-12
+        div.embed-responsive.embed-responsive-16by9.video-player
+          div#youtubePlayer
+    div.row
+      div.hidden-xs.col-sm-2
+      div.col-xs-12.col-sm-8
+        div.btn-group.btn-group-justified.btn-group-justified-3
+          div.btn.btn-default(ng-click='prevVideo()') <i class='fa fa-chevron-left'></i> Previous
+          div.btn.btn-default(ng-click='lightsOff=true') <i class='fa fa-lightbulb-o'></i> Lights Off
+          div.btn.btn-default(ng-click='nextVideo()') Next <i class='fa fa-chevron-right'></i>
+      div.hidden-xs.col-sm-2
+div.panel.channel-container
+  //-
+    div.container.text-center
+      ul.nav.nav-pills
+        li.active
+          a(href='#') Playlists
+        li
+          a(href='#') Video Info
+  div.panel.panel-primary.playlists-live
+    div.panel-heading
+      div.panel-title Live Playlists
+    div.panel-content
+      div.playlist.row
+        div.col-xs-6
+          div.live-radio(ng-class='{"active": selectedPlaylist.id == timeline.id}' ng-click='liveSwitch(timeline.id, timeline.items)')
+          h3 Timeline
+        div.col-xs-6.text-right
+          div.btn-group.btn-group-sm
+            button.btn.btn-default(type='button' title='Play from Beginning' ng-click='loadVideo(timeline.items, 0, timeline.id)')
+              i.fa.fa-play
+            button.btn.btn-default(type='button' title='Reverse Order')
+              i.fa.fa-exchange
+        div.col-xs-12.playlist-videos
+          a.playlist-video(ng-repeat='item in timeline.items | orderBy:"snippet.publishedAt"' ng-attr-title='{{item.snippet.title}}' ng-class='{"playlist-video-active": item.snippet.resourceId.videoId == activeVideo.id, "live-playlist-video-active": item.snippet.resourceId.videoId == activeVideo.id && selectedPlaylist.id == timeline.id}' ng-click='loadVideo(timeline.items, $index, timeline.id)' href='#')
+            div
+              div.video-thumbnail(ng-attr-style='background-image: url("{{ item.snippet.thumbnails.medium.url }}");')
+              div.video-name(ng-bind='item.snippet.title') Video Title
+      div.playlist.row(ng-repeat='playlist in playlists | orderBy:"-snippet.publishedAt" | livePlaylists' ng-init='plIndex=$index')
+        div.col-xs-6
+          div.live-radio(ng-class='{"active": selectedPlaylist.id == playlist.id}' ng-click='liveSwitch(playlist.id, playlist.items)')
+          h3(ng-bind='playlist.snippet.title') Playlist Title
+        div.col-xs-6.text-right
+          div.btn-group.btn-group-sm
+            button.btn.btn-default(type='button' title='Play from Beginning' ng-click='loadVideo(playlist.items, 0, playlist.id)')
+              i.fa.fa-play
+            button.btn.btn-default(type='button' title='Reverse Order' ng-click='reversePlaylist(playlist.id)')
+              i.fa.fa-exchange
+        div.col-xs-12.playlist-videos
+          a.playlist-video(ng-repeat='item in playlist.items' ng-attr-title='{{item.snippet.title}}' ng-class='{"playlist-video-active": item.snippet.resourceId.videoId == activeVideo.id, "live-playlist-video-active": item.snippet.resourceId.videoId == activeVideo.id && selectedPlaylist.id == playlist.id}' ng-click='loadVideo(playlist.items, $index, playlist.id)' href='#')
+            div
+              div.video-thumbnail(ng-attr-style='background-image: url("{{ item.snippet.thumbnails.medium.url }}");')
+              div.video-name(ng-bind='item.snippet.title') Video Title
+  div.panel.playlists-other
+    div.panel-content
+      div.playlist.row(ng-repeat='playlist in playlists | orderBy:"-snippet.publishedAt" | livePlaylists:false' ng-init='plIndex=$index')
+        div.col-xs-6
+          h3(ng-bind='playlist.snippet.title') Playlist Title
+        div.col-xs-6.text-right
+          div.btn-group.btn-group-sm
+            button.btn.btn-default(type='button' title='Play from Beginning' ng-click='loadVideo(playlist.items, 0, playlist.id)')
+              i.fa.fa-play
+            button.btn.btn-default(type='button' title='Reverse Order' ng-click='reversePlaylist(playlist.id)')
+              i.fa.fa-exchange
+        div.col-xs-12.playlist-videos
+          a.playlist-video(ng-repeat='item in playlist.items' ng-attr-title='{{item.snippet.title}}' ng-class='{"playlist-video-active": item.snippet.resourceId.videoId == activeVideo.id}' ng-click='loadVideo(playlist.items, $index, playlist.id)' href='#')
+            div
+              div.video-thumbnail(ng-attr-style='background-image: url("{{ item.snippet.thumbnails.medium.url }}");')
+              div.video-name(ng-bind='item.snippet.title') Video Title
