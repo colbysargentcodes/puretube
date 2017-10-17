@@ -164,7 +164,7 @@ app.factory('ytPlayer', function ($rootScope, ytCustom) {
     }
   };
   
-  var onPlayerStateChange = function (event) { console.log(event.data);
+  var onPlayerStateChange = function (event) {
     if (event.data == YT.PlayerState.UNSTARTED) {
       // ALT: event.data == -1
       ytCustom.setActiveVideoById(player.getVideoData().video_id);
@@ -207,6 +207,8 @@ app.factory('ytPlayer', function ($rootScope, ytCustom) {
   };
   
   var nextVideo = function () {
+    console.log(player.getPlaylistIndex());
+    console.log(player.getPlaylist());
     if (!checkSelected(true) && player.getPlaylistIndex() < player.getPlaylist().length - 1) player.nextVideo();
   };
   
@@ -289,7 +291,13 @@ app.factory('ytCustom', function ($rootScope, ytData, $q) {
         ytData.getPlaylistItems(id, nextPage).then(function (res) {
           allItems = allItems.concat(res.data.items);
           if (res.data.nextPageToken) getPlaylistItems(res.data.nextPageToken);
-          else defer.resolve(allItems);
+          else {
+            for (var i = allItems.length - 1; i > -1; i--) {
+              if (allItems[i].status.privacyStatus == 'private') allItems.splice(i, 1);
+            }
+            allItems = allItems.slice(0, 200); // current API limitation, player only allows playlist length of 200
+            defer.resolve(allItems);
+          }
         });
       }
       

@@ -47,6 +47,11 @@ app.controller('channelController', function ($scope, $rootScope, $routeParams, 
     ytPlayer.nextVideo();
   };
   
+  $scope.reverseTimeline = function() {
+    $scope.reverseTimelineOrder = !$scope.reverseTimelineOrder;
+    if ($scope.timeline.id == $rootScope.selectedPlaylist.id) $rootScope.selectedPlaylist.items = playlistIds($scope.timeline.items.reverse());
+  };
+  
   $scope.reversePlaylist = function (id) {
     var targetPlaylist = $filter('filter')($scope.playlists, {id: id})[0];
     if (targetPlaylist) {
